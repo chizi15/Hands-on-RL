@@ -8,7 +8,8 @@ import numpy as np  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 
 
-plot = 1
+steps = 50000  # 每轮学习的总步数
+plot = 1  # 是否绘制累积懊悔曲线
 np.random.seed(1)
 
 
@@ -110,7 +111,7 @@ def plot_results(solvers, solver_names):
         plt.xlabel("Time steps")
         plt.ylabel("Cumulative regrets")
         plt.title("%d-armed bandit" % solver.bandit.K)
-        plt.legend()
+        plt.legend(loc="best")
         plt.show()
     if len(solvers) > 1:
         for idx, solver in enumerate(solvers):
@@ -119,12 +120,12 @@ def plot_results(solvers, solver_names):
         plt.xlabel("Time steps")
         plt.ylabel("Cumulative regrets")
         plt.title("%d-armed bandit" % solvers[0].bandit.K)
-        plt.legend()
+        plt.legend(loc="best")
         plt.show()
 
 
-epsilon_greedy_solver = EpsilonGreedy(bandit_10_arm, epsilon=0.01)
-epsilon_greedy_solver.run(5000)
+epsilon_greedy_solver = EpsilonGreedy(bandit_10_arm, epsilon=1e-4)
+epsilon_greedy_solver.run(steps*100)
 print("epsilon-贪婪算法的累积懊悔为：", epsilon_greedy_solver.regret)
 if plot:
     plot_results([epsilon_greedy_solver], ["EpsilonGreedy"])
@@ -136,7 +137,7 @@ epsilons = [1e-4, 0.01, 0.1, 0.25, 0.5]
 epsilon_greedy_solver_list = [EpsilonGreedy(bandit_10_arm, epsilon=e) for e in epsilons]
 epsilon_greedy_solver_names = ["epsilon={}".format(e) for e in epsilons]
 for solver in epsilon_greedy_solver_list:
-    solver.run(5000)
+    solver.run(steps*1000)
 
 if plot:
     plot_results(epsilon_greedy_solver_list, epsilon_greedy_solver_names)
@@ -165,7 +166,7 @@ class DecayingEpsilonGreedy(Solver):
 
 
 decaying_epsilon_greedy_solver = DecayingEpsilonGreedy(bandit_10_arm)
-decaying_epsilon_greedy_solver.run(5000)
+decaying_epsilon_greedy_solver.run(steps)
 print("epsilon值衰减的贪婪算法的累积懊悔为：", decaying_epsilon_greedy_solver.regret)
 if plot:
     plot_results([decaying_epsilon_greedy_solver], ["DecayingEpsilonGreedy"])
@@ -196,7 +197,7 @@ class UCB(Solver):
 
 coef = 1  # 控制不确定性比重的系数
 UCB_solver = UCB(bandit_10_arm, coef)
-UCB_solver.run(5000)
+UCB_solver.run(steps)
 print("上置信界算法的累积懊悔为：", UCB_solver.regret)
 if plot:
     plot_results([UCB_solver], ["UCB"])
@@ -224,7 +225,7 @@ class ThompsonSampling(Solver):
 
 
 thompson_sampling_solver = ThompsonSampling(bandit_10_arm)
-thompson_sampling_solver.run(5000)
+thompson_sampling_solver.run(steps)
 print("汤普森采样算法的累积懊悔为：", thompson_sampling_solver.regret)
 if plot:
     plot_results([thompson_sampling_solver], ["ThompsonSampling"])
