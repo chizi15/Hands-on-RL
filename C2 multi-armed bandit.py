@@ -125,7 +125,7 @@ def plot_results(solvers, solver_names):
 
 
 epsilon_greedy_solver = EpsilonGreedy(bandit_10_arm, epsilon=1e-4)
-epsilon_greedy_solver.run(steps*100)
+epsilon_greedy_solver.run(steps*1)
 print("epsilon-贪婪算法的累积懊悔为：", epsilon_greedy_solver.regret)
 if plot:
     plot_results([epsilon_greedy_solver], ["EpsilonGreedy"])
@@ -137,7 +137,7 @@ epsilons = [1e-4, 0.01, 0.1, 0.25, 0.5]
 epsilon_greedy_solver_list = [EpsilonGreedy(bandit_10_arm, epsilon=e) for e in epsilons]
 epsilon_greedy_solver_names = ["epsilon={}".format(e) for e in epsilons]
 for solver in epsilon_greedy_solver_list:
-    solver.run(steps*1000)
+    solver.run(steps*1)
 
 if plot:
     plot_results(epsilon_greedy_solver_list, epsilon_greedy_solver_names)
